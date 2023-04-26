@@ -1,7 +1,7 @@
 version: "3"
 
 services:
-  # Serviço que irá rodar o node
+  # S erviço que irá rodar o node
   node:
     # Imagem base do container
     build: .
