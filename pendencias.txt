@@ -1,0 +1,2 @@
+Middlewares de validação no GET de products e products/:id
+validar se é um número
