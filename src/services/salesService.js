@@ -6,6 +6,15 @@ const getAll = async () => {
   return sales;
 };
 
+const findById = async (saleId) => {
+  const sales = await salesModel.getAll();
+  const existsSale = sales.some((sale) => sale.saleId === saleId);
+  if (!existsSale) return { type: 404, message: 'Sale not found' };
+  
+  const sale = await salesModel.findById(saleId);
+  return sale;
+};
+
 const create = async (sales) => {
   const products = await productsModel.getAll();
   const productIds = products.map((product) => product.id);
@@ -20,4 +29,5 @@ const create = async (sales) => {
 module.exports = {
   getAll,
   create,
+  findById,
 };

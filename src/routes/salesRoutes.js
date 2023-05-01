@@ -4,6 +4,8 @@ const salesValidation = require('../middlewares/salesValidation');
 
 const router = express.Router();
 
+router.get('/:id', salesController.findById);
+
 router.get('/', salesController.getAll);
 
 router.post('/',
