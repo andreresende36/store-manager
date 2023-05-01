@@ -5,12 +5,17 @@
     "containerId": "",
     "name": "http://localhost:3001",
     "url": "http://localhost:3001/sales",
-    "method": "GET",
+    "method": "POST",
     "sortNum": 0,
     "created": "2023-04-28T18:26:37.525Z",
-    "modified": "2023-04-30T21:30:44.662Z",
+    "modified": "2023-05-01T21:34:55.822Z",
     "headers": [],
     "params": [],
+    "body": {
+      "type": "json",
+      "raw": "[\n  {\n    \"productId\": 1,\n    \"quantity\": 1\n  },\n  {\n    \"productId\": 300,\n    \"quantity\": 5\n  }\n]",
+      "form": []
+    },
     "tests": []
   },
   {
