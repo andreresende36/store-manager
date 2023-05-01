@@ -20,8 +20,17 @@ const create = async (product) => {
   return { id: insertId, name };
 };
 
+const update = async ({ productId, name }) => {
+  const [result] = await connection.execute(
+    'UPDATE StoreManager.products SET name = ? WHERE id = ?',
+    [name, productId],
+  );
+  return result;
+};
+
 module.exports = {
   getAll,
   findById,
   create,
+  update,
 };
