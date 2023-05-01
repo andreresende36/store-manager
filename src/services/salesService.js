@@ -26,8 +26,16 @@ const create = async (sales) => {
   return createdSales;
 };
 
+const exclude = async (saleId) => {
+  const result = await salesModel.exclude(saleId);
+
+  if (result.affectedRows === 0) return { type: 404, message: 'Sale not found' };
+  return true;
+};
+
 module.exports = {
   getAll,
   create,
   findById,
+  exclude,
 };
