@@ -4,18 +4,19 @@
     "colId": "history",
     "containerId": "",
     "name": "http://localhost:3001",
-    "url": "http://localhost:3001/sales/2",
-    "method": "DELETE",
+    "url": "http://localhost:3001/products/search?q=",
+    "method": "GET",
     "sortNum": 0,
     "created": "2023-04-28T18:26:37.525Z",
-    "modified": "2023-05-01T23:13:30.279Z",
+    "modified": "2023-05-01T23:45:39.003Z",
     "headers": [],
-    "params": [],
-    "body": {
-      "type": "json",
-      "raw": "{\n  \"name\": \"Martelo do Carai\"\n}",
-      "form": []
-    },
+    "params": [
+      {
+        "name": "q",
+        "value": "",
+        "isPath": false
+      }
+    ],
     "tests": []
   },
   {

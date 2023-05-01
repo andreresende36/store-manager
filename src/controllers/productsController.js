@@ -29,9 +29,25 @@ const update = async (req, res) => {
   return res.status(200).json({ id: productId, name });
 };
 
+const exclude = async (req, res) => {
+  const productId = Number(req.params.id);
+  const result = await productsServices.exclude(productId);
+  const { type = undefined, message = undefined } = result;
+  if (type) return res.status(type).json({ message });
+  return res.status(204).json();
+};
+
+const search = async (req, res) => {
+  const { query: { q } } = req;
+  const result = await productsServices.search(q);
+  return res.status(200).json(result);
+};
+
 module.exports = {
   getAll,
   findById,
   create,
   update,
+  exclude,
+  search,
 };

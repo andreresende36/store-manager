@@ -22,9 +22,22 @@ const update = async ({ productId, name }) => {
   return true;
 };
 
+const exclude = async (productId) => {
+  const result = await productsModel.exclude(productId);
+  if (result.affectedRows === 0) return { type: 404, message: 'Product not found' };
+  return true;
+};
+
+const search = async (query) => {
+  const result = await productsModel.search(query);
+  return result;
+};
+
 module.exports = {
   getAll,
   findById,
   create,
   update,
+  exclude,
+  search,
 };

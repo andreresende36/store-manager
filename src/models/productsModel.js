@@ -28,9 +28,28 @@ const update = async ({ productId, name }) => {
   return result;
 };
 
+const exclude = async (productId) => {
+  const [result] = await connection.execute(
+    'DELETE FROM StoreManager.products WHERE id = ?',
+    [productId],
+  );
+  return result;
+};
+
+const search = async (query) => {
+  const transformedQuery = `%${query}%`;
+  const [result] = await connection.execute(
+    'SELECT id, name FROM StoreManager.products WHERE name LIKE ?;',
+    [transformedQuery],
+  );
+  return result;
+};
+
 module.exports = {
   getAll,
   findById,
   create,
   update,
+  exclude,
+  search,
 };
