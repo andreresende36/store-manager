@@ -13,6 +13,11 @@ router.post('/',
   salesValidation.quantityValidation,
   salesController.create);
 
+router.put('/:id',
+  salesValidation.productIdValidation,
+  salesValidation.quantityValidation,
+  salesController.update);
+
 router.delete('/:id', salesController.exclude);
 
 module.exports = router;

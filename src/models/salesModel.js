@@ -20,21 +20,32 @@ const findById = async (saleId) => {
   return camelize(sale);
 };
 
-const create = async (sales) => {
+const create = async (sale) => {
   // const placeholders = sales.map((_e, i) => (i !== sales.length - 1 ? '(?), ' : '(?);')).join('');
   const currentDateTime = new Date();
   const [{ insertId }] = await connection.execute(
     'INSERT INTO StoreManager.sales (date) VALUES (?);',
     [currentDateTime],
   );
-  sales.forEach(async (product) => {
+  sale.forEach(async (product) => {
     const { productId, quantity } = product;
     await connection.execute(
       'INSERT INTO StoreManager.sales_products (product_id, sale_id, quantity) VALUES (?, ?, ?);',
       [productId, insertId, quantity], 
     );
   });
-  return { id: insertId, itemsSold: sales };
+  return { id: insertId, itemsSold: sale };
+};
+
+const update = async ({ saleId, sale }) => {
+  const result = await sale.map(async (product) => {
+    const [partialResult] = await connection.execute(
+      'UPDATE StoreManager.sales_products SET quantity = ? WHERE sale_id = ? AND product_id = ?;',
+      [product.quantity, saleId, product.productId],
+    );
+    return partialResult;
+  });
+  return result;
 };
 
 const exclude = async (saleId) => {
@@ -44,10 +55,11 @@ const exclude = async (saleId) => {
   );
   return result;
 };
-  
+
 module.exports = {
   getAll,
   create,
   findById,
+  update,
   exclude,
 };
