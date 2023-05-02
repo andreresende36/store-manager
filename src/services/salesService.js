@@ -33,7 +33,7 @@ const update = async ({ saleId, sale }) => {
 
   const result = await Promise.all(await salesModel.update({ saleId, sale })).then((res) => res);
   if (result.every((res) => res.affectedRows === 1)) return true;
- 
+
   return { type: 404, message: 'Product not found' };
 };
 

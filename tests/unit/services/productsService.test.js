@@ -6,7 +6,7 @@ const sinonChai = require('sinon-chai')
 chai.use(sinonChai);
 
 const productsModel = require('../../../src/models/productsModel')
-const productsService = require('../../../src/services/productsServices');
+const productsService = require('../../../src/services/productsService');
 const products = require('../mocks/products.mock');
 
 describe('Testa a camada Service no arquivo productsService.js', () => {
