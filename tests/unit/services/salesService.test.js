@@ -5,34 +5,40 @@ const sinonChai = require('sinon-chai')
 
 chai.use(sinonChai);
 
-const salesModel = require('../../../src/models/salesModel')
+const productsModel = require('../../../src/models/productsModel');
+const salesModel = require('../../../src/models/salesModel');
 const salesService = require('../../../src/services/salesService');
+const { products } = require('../mocks/products.mock');
 const {
   salesCamelCase,
   salesSnakeCase,
   saleFindByIdResultSnakeCase,
   saleFindByIdResultCamelCase,
   newSale,
+  newSaleProductIdNotFound,
   updatedSale,
   partialResult,
-  excludeResult } = require('../mocks/sales.mock');
+  excludeResult, 
+  partialResultProductIdFound,
+  updatedSaleProductIdNotFound,
+  excludeResultProductNotFound} = require('../mocks/sales.mock');
 
 describe('Testa a camada Service no arquivo salesService.js', () => {
   afterEach(() => sinon.restore());
 
   //getAll
-  describe('Testes da função getAll', () => { 
-    it('Service - Testa se a rota /products com o método GET retorna todos os produtos da tabela', async () => {
-      sinon.stub(salesModel, 'getAll').resolves(products);     
+  describe('Testes da função getAll', () => {
+    it('Service - Testa se a rota /sales com o método GET repassa e retorna os dados corretos entre as camadas Controller e Model', async () => {
+      sinon.stub(salesModel, 'getAll').resolves(salesCamelCase);
       const result = await salesService.getAll();
     
-      expect(result).to.be.equals(products);
+      expect(result).to.be.equals(salesCamelCase);
       expect(result).to.be.an('array');
       expect(result).to.have.length(3);
-      expect(result[0]).to.contain.keys(['id', 'name']);
+      expect(result[0]).to.contain.keys(['saleId', 'date', 'productId', 'quantity']);
     });
   
-    it('Service - Testa se a rota /products com o método GET retorna um array vazio caso não exista nenhum produto cadastrado', async () => {
+    it('Service - Testa se a rota /sales com o método GET retorna um array vazio caso não exista nenhuma venda cadastrada', async () => {
       sinon.stub(salesModel, 'getAll').resolves([]);
   
       const result = await salesService.getAll();
@@ -44,20 +50,49 @@ describe('Testa a camada Service no arquivo salesService.js', () => {
 
   //findById
   describe('Testes da função findById', () => {
-    it('Service - Testa se a rota /products/:id com o método GET retorna os dados do produto com o ID especificado', async () => {
-      sinon.stub(salesModel, 'findById').resolves(products[0]);
+    it('Service - Testa se a rota /sales/:id com o método GET rapassa e retorna os dados de uma venda com o ID especificado entre as camadas Controller e Model', async () => {
+      const mockId = 1;
+      sinon.stub(salesModel, 'findById').resolves(saleFindByIdResultCamelCase);
   
-      const result = await salesService.findById(1);
+      const result = await salesService.findById(mockId);
   
-      expect(result).to.be.equals(products[0]);
-      expect(result).to.be.an('object');
-      expect(result).to.contain.keys(['id', 'name']);
+      expect(result).to.be.equals(saleFindByIdResultCamelCase);
+      expect(result).to.be.an('array');
+      expect(result).to.have.length(2);
+      expect(result[0]).to.contain.keys(['date', 'productId', 'quantity']);
     });
   
-    it('Service - Testa se a rota /products/:id com o método GET retorna um array vazio caso não exista um produto com o ID especificado', async () => {
-      sinon.stub(salesModel, 'findById').resolves([]);
+    it('Service - Testa se a rota /sales/:id com o método GET repassa e retorna uma mensagem de erro caso não exista uma venda com o ID especificado', async () => {
+      const mockId = 10;
+      sinon.stub(salesModel, 'getAll').resolves(salesCamelCase);
   
-      const result = await salesService.findById(5);
+      const result = await salesService.findById(mockId);
+      expect(result).to.be.an('object');
+      expect(result).to.contain.keys(['type', 'message']);
+      expect(result.type).to.be.equals(404);
+      expect(result.message).to.be.equals('Sale not found');
+    });
+  });
+
+  //create
+  describe('Testes da função create', () => {
+    it('Service - Testa se a rota /sales com o método POST repassa e retorna os dados corretamente entre as camadas Controller e Model', async () => {
+      const insertIdMock = 4;
+      sinon.stub(salesModel, 'create').resolves({ id: insertIdMock, itemsSold: newSale });
+
+      const result = await salesService.create(newSale);
+
+      expect(result).to.be.an('object');
+      expect(result.id).to.be.equals(insertIdMock);
+      expect(result.itemsSold).to.be.equals(newSale);
+      expect(result).to.contains.keys(['id', 'itemsSold']);
+    });
+
+    it('Service - Testa se a rota /sales com o método POST retorna uma mensagem de erro caso não encontre o ID de algum dos produtos no banco de dados', async () => {
+      sinon.stub(productsModel, 'getAll').resolves(products);
+
+      const result = await salesService.create(newSaleProductIdNotFound);
+
       expect(result).to.be.an('object');
       expect(result).to.contain.keys(['type', 'message']);
       expect(result.type).to.be.equals(404);
@@ -65,80 +100,63 @@ describe('Testa a camada Service no arquivo salesService.js', () => {
     });
   });
 
-  //create
-  describe('Testes da função create', () => { 
-    it('Service - Testa se a rota /products com o método POST repassa e retorna os dados corretamente entre as camadas Controller e Model', async () => {
-      const insertIdMock = 4;
-      sinon.stub(salesModel, 'create').resolves({ id: insertIdMock, name: newProduct.name });
-
-      const result = await salesService.create(newProduct);
-
-      expect(result).to.be.an('object');
-      expect(result.id).to.be.equals(insertIdMock);
-      expect(result.name).to.be.equals(newProduct.name);
-      expect(result).to.contains.keys(['id', 'name']);
-    });
-  });
-
   //update
   describe('Testes da função update', () => {
-    it('Service - Testa se a rota /products/:id com o método PUT repassa e retorna os dados corretamente entre as camadas Controller e Model', async () => {
+    it('Service - Testa se a rota /sales/:id com o método PUT repassa e retorna os dados corretamente entre as camadas Controller e Model', async () => {
       const mockId = 1;
-      sinon.stub(salesModel, 'update').resolves(updateResult);
+      sinon.stub(salesModel, 'update').resolves([partialResult, partialResult]);
 
-      const result = await salesService.update({ productId: mockId, name: newProduct.name });
+      const result = await salesService.update({ saleId: mockId, sale: updatedSale });
 
       expect(result).to.be.true;
     });
 
-    it('Service - Testa se a rota /products/:id com o método PUT retorna um erro caso o ID do produto fornecido não seja encontrado no banco de dados', async () => {
-      const mockId = 10;
-      sinon.stub(salesModel, 'update').resolves(updateResultProductNotFound);
+    it('Service - Testa se a rota /sales/:id com o método PUT retorna um erro caso algum ID dos produtos fornecidos não seja encontrado no banco de dados', async () => {
+      const mockId = 1;
+      sinon.stub(salesModel, 'update').resolves([partialResult, partialResultProductIdFound]);
 
-      const result = await salesService.update({ productId: mockId, name: newProduct.name });
+      const result = await salesService.update({ saleId: mockId, sale: updatedSaleProductIdNotFound });
 
       expect(result).to.contains.keys(['type', 'message']);
       expect(result).to.be.an('object');
       expect(result.type).to.be.equals(404);
       expect(result.message).to.be.equals('Product not found');
+    });
+
+    it('Service - Testa se a rota /sales/:id com o método PUT retorna um erro caso algum ID dos produtos fornecidos não seja encontrado no banco de dados', async () => {
+      const mockId = 10;
+      sinon.stub(salesModel, 'getAll').resolves(salesCamelCase);
+
+      const result = await salesService.update({ saleId: mockId, sale: updatedSale });
+
+      expect(result).to.contains.keys(['type', 'message']);
+      expect(result).to.be.an('object');
+      expect(result.type).to.be.equals(404);
+      expect(result.message).to.be.equals('Sale not found');
     });
   });
 
   //exclude
-  describe('Testes da função exclude', () => { 
-    it('Service - Testa se a rota /products/:id com o método DELETE repassa e retorna os dados corretamente entre as camadas Controller e Model', async () => {
+  describe('Testes da função exclude', () => {
+    it('Service - Testa se a rota /sales/:id com o método DELETE repassa e retorna os dados corretamente entre as camadas Controller e Model', async () => {
       const mockId = 1;
       sinon.stub(salesModel, 'exclude').resolves(excludeResult);
 
-      const result = await salesService.exclude({ productId: mockId });
+      const result = await salesService.exclude({ saleId: mockId });
 
       expect(result).to.be.true;
     });
 
-    it('Service - Testa se a rota /products/:id com o método DELETE retorna um erro caso o ID do produto fornecido não seja encontrado no banco de dados', async () => {
+    it('Service - Testa se a rota /sales/:id com o método DELETE retorna um erro caso o ID da venda fornecido não seja encontrado no banco de dados', async () => {
       const mockId = 10;
       sinon.stub(salesModel, 'exclude').resolves(excludeResultProductNotFound);
 
-      const result = await salesService.exclude({ productId: mockId });
+      const result = await salesService.exclude({ saleId: mockId });
 
       expect(result).to.contains.keys(['type', 'message']);
       expect(result).to.be.an('object');
       expect(result.type).to.be.equals(404);
-      expect(result.message).to.be.equals('Product not found');
+      expect(result.message).to.be.equals('Sale not found');
     });
   });
-
-  //search
-  describe('Testes da função search', () => {
-    it('Service - Testa se a rota /products/search com o método GET repassa os dados corretamente entre as camadas Controller e Model', async () => {
-      const mockQuery = 'mar';
-      sinon.stub(salesModel, 'search').resolves(products[0]);
-
-      const result = await salesService.search(mockQuery);
-
-      expect(result).to.be.an('object');
-      expect(result).to.be.deep.equals(products[0]);
-      expect(result).to.contains.keys(['id', 'name']);
-    });
-  });
-})
+});

@@ -77,6 +77,17 @@ const newSale = [
   }
 ];
 
+const newSaleProductIdNotFound = [
+  {
+    "productId": 1,
+    "quantity": 1
+  },
+  {
+    "productId": 10,
+    "quantity": 5
+  }
+];
+
 const updatedSale = [
   {
     "productId": 1,
@@ -84,6 +95,17 @@ const updatedSale = [
   },
   {
     "productId": 2,
+    "quantity": 50
+  }
+];
+
+const updatedSaleProductIdNotFound = [
+  {
+    "productId": 1,
+    "quantity": 10
+  },
+  {
+    "productId": 10,
     "quantity": 50
   }
 ];
@@ -98,9 +120,28 @@ const partialResult = {
   changedRows: 1
 };
 
+const partialResultProductIdFound = {
+  fieldCount: 0,
+  affectedRows: 0,
+  insertId: 0,
+  info: 'Rows matched: 0  Changed: 0  Warnings: 0',
+  serverStatus: 2,
+  warningStatus: 0,
+  changedRows: 0
+};
+
 const excludeResult = {
   fieldCount: 0,
   affectedRows: 1,
+  insertId: 0,
+  info: '',
+  serverStatus: 2,
+  warningStatus: 0
+};
+
+const excludeResultProductNotFound = {
+  fieldCount: 0,
+  affectedRows: 0,
   insertId: 0,
   info: '',
   serverStatus: 2,
@@ -113,7 +154,11 @@ module.exports = {
   saleFindByIdResultSnakeCase,
   saleFindByIdResultCamelCase,
   newSale,
+  newSaleProductIdNotFound,
   updatedSale,
+  updatedSaleProductIdNotFound,
   partialResult,
-  excludeResult
+  partialResultProductIdFound,
+  excludeResult,
+  excludeResultProductNotFound
 };
