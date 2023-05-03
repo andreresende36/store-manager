@@ -8,7 +8,7 @@
     "method": "GET",
     "sortNum": 0,
     "created": "2023-04-28T18:26:37.525Z",
-    "modified": "2023-05-02T21:48:01.235Z",
+    "modified": "2023-05-03T12:59:50.902Z",
     "headers": [],
     "params": [
       {
@@ -19,7 +19,7 @@
     ],
     "body": {
       "type": "json",
-      "raw": "[\n  {\n    \"productId\": 500,\n    \"quantity\": 1\n  },\n  {\n    \"productId\": 2,\n    \"quantity\": 100\n  }\n]",
+      "raw": "{\n  \"name\": \"Martelo do Batman\"\n}",
       "form": []
     },
     "tests": []

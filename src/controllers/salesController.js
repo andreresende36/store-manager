@@ -27,7 +27,7 @@ const update = async (req, res) => {
   const result = await salesService.update({ saleId, sale: newData });
   const { type = undefined, message = undefined } = result;
   if (type) return res.status(type).json({ message });
-  if (result) return res.status(200).json({ saleId, itemsUpdated: newData });
+  return res.status(200).json({ saleId, itemsUpdated: newData });
 };
 
 const exclude = async (req, res) => {

@@ -7,7 +7,7 @@ chai.use(sinonChai);
 
 const productsService = require('../../../src/services/productsService');
 const productsController = require('../../../src/controllers/productsController')
-const products = require('../mocks/products.mock');
+const { products } = require('../mocks/products.mock');
 
 describe('Testa a camada Controllers no arquivo productsController.js', () => {
   afterEach(() => sinon.restore());
@@ -62,7 +62,7 @@ describe('Testa a camada Controllers no arquivo productsController.js', () => {
       expect(res.json).to.have.been.calledWith(products[0]);
     });
   
-    it('Controller - Testa se a rota /products/:id com o método GET retorna um array vazio caso não exista um produto com o ID especificado', async () => {
+    it('Controller - Testa se a rota /products/:id com o método GET retorna uma mensagem de erro caso não exista um produto com o ID especificado', async () => {
       sinon.stub(productsService, 'findById').resolves({ type: 404, message: 'Product not found' });
   
       const req = { params: { id: 5 } };
@@ -128,7 +128,7 @@ describe('Testa a camada Controllers no arquivo productsController.js', () => {
 
   //exclude
   describe('Testes da função exclude', () => {
-    it('Controller - Testa se a rota /products/:id com o método DELETE deleta o objeto corretamente', async () => {
+    it('Controller - Testa se a rota /products/:id com o método DELETE deleta o produto corretamente', async () => {
       const req = { params: { id: 1} };
       const res = {};
       sinon.stub(productsService, 'exclude').resolves(true);
