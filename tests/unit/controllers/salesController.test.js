@@ -7,7 +7,7 @@ chai.use(sinonChai);
 
 const salesService = require('../../../src/services/salesService');
 const salesController = require('../../../src/controllers/salesController');
-const { sales,
+const { salesCamelCase,
   newSale,
   updatedSale,
 } = require('../mocks/sales.mock');
@@ -18,7 +18,7 @@ describe('Testa a camada Controllers no arquivo salesController.js', () => {
   //getAll
   describe('Testes da função getAll', () => {
     it('Controller - Testa se a rota /sales com o método GET retorna todas as vendas da tabela', async () => {
-      sinon.stub(salesService, 'getAll').resolves(sales);
+      sinon.stub(salesService, 'getAll').resolves(salesCamelCase);
   
       const req = {};
       const res = {};
@@ -29,7 +29,7 @@ describe('Testa a camada Controllers no arquivo salesController.js', () => {
       await salesController.getAll(req, res);
   
       expect(res.status).to.have.been.calledWith(200);
-      expect(res.json).to.have.been.calledWith(sales);
+      expect(res.json).to.have.been.calledWith(salesCamelCase);
     });
   
     it('Controller - Testa se a rota /sales com o método GET retorna um array vazio caso não exista nenhuma venda cadastrada', async () => {
@@ -51,7 +51,7 @@ describe('Testa a camada Controllers no arquivo salesController.js', () => {
   //findById
   describe('Testes da função findById', () => {
     it('Controller - Testa se a rota /sales/:id com o método GET retorna os dados da venda com o ID especificado', async () => {
-      sinon.stub(salesService, 'findById').resolves(sales[0]);
+      sinon.stub(salesService, 'findById').resolves(salesCamelCase[0]);
   
       const req = { params: { id: 1 } };
       const res = {};
@@ -62,7 +62,7 @@ describe('Testa a camada Controllers no arquivo salesController.js', () => {
       await salesController.findById(req, res);
   
       expect(res.status).to.have.been.calledWith(200);
-      expect(res.json).to.have.been.calledWith(sales[0]);
+      expect(res.json).to.have.been.calledWith(salesCamelCase[0]);
     });
   
     it('Controller - Testa se a rota /sales/:id com o método GET retorna uma mensagem de erro caso não exista uma venda com o ID especificado', async () => {

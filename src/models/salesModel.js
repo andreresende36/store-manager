@@ -45,7 +45,7 @@ const update = async ({ saleId, sale }) => {
     );
     return partialResult;
   });
-  return result;
+  return Promise.all(await result).then((data) => data);
 };
 
 const exclude = async (saleId) => {
