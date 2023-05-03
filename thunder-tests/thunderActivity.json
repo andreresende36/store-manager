@@ -4,19 +4,13 @@
     "colId": "history",
     "containerId": "",
     "name": "http://localhost:3001",
-    "url": "http://localhost:3001/products/search?q=mar",
-    "method": "GET",
+    "url": "http://localhost:3001/products/100",
+    "method": "DELETE",
     "sortNum": 0,
     "created": "2023-04-28T18:26:37.525Z",
-    "modified": "2023-05-03T12:59:50.902Z",
+    "modified": "2023-05-03T13:55:15.362Z",
     "headers": [],
-    "params": [
-      {
-        "name": "q",
-        "value": "mar",
-        "isPath": false
-      }
-    ],
+    "params": [],
     "body": {
       "type": "json",
       "raw": "{\n  \"name\": \"Martelo do Batman\"\n}",

@@ -25,6 +25,16 @@ const updateResult = {
   changedRows: 1
 };
 
+const updateResultProductNotFound = {
+  fieldCount: 0,
+  affectedRows: 0,
+  insertId: 0,
+  info: 'Rows matched: 0  Changed: 0  Warnings: 0',
+  serverStatus: 2,
+  warningStatus: 0,
+  changedRows: 0
+};
+
 const excludeResult = {
   fieldCount: 0,
   affectedRows: 1,
@@ -34,4 +44,20 @@ const excludeResult = {
   warningStatus: 0
 };
 
-module.exports = { products, newProduct, updateResult, excludeResult };
+const excludeResultProductNotFound = {
+  fieldCount: 0,
+  affectedRows: 0,
+  insertId: 0,
+  info: '',
+  serverStatus: 2,
+  warningStatus: 0
+};
+
+module.exports = {
+  products,
+  newProduct,
+  updateResult,
+  excludeResult,
+  updateResultProductNotFound,
+  excludeResultProductNotFound
+};
